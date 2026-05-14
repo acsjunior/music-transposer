@@ -1,0 +1,10 @@
+[project]
+name = "music-transposer"
+version = "0.1.0"
+description = "Aplicação web para transposição de tom e ajuste de velocidade de músicas do YouTube"
+requires-python = ">=3.12"
+dependencies = [
+    "pedalboard>=0.9.22",
+    "streamlit>=1.57.0",
+    "yt-dlp>=2026.3.17",
+]
