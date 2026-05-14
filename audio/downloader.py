@@ -12,6 +12,7 @@ def download_audio(url: str, tmp_dir: str) -> tuple[str, str]:
         "outtmpl": os.path.join(tmp_dir, "audio.%(ext)s"),
         "postprocessors": [{"key": "FFmpegExtractAudio", "preferredcodec": "wav"}],
         "quiet": True,
+        "noplaylist": True,
     }
     with yt_dlp.YoutubeDL(yt_opts) as ydl:
         info = ydl.extract_info(url, download=True)
