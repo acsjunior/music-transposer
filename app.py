@@ -5,7 +5,7 @@ import yt_dlp
 from pedalboard import Pedalboard, PitchShift
 from pedalboard.io import AudioFile
 
-st.title("Music Transposer — PoC")
+st.title("Music Transposer")
 
 url = st.text_input("Link do YouTube")
 semitones = st.slider("Semitons", min_value=-12, max_value=12, value=0)

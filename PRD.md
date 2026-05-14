@@ -18,19 +18,16 @@ Alunos do Conservatório de MPB de Curitiba — especialmente violonistas e guit
 |---|---------------|-----------|
 | 1 | **Entrada por link do YouTube** | Usuário cola a URL de uma música do YouTube |
 | 2 | **Transposição de tom (pitch shift)** | Ajuste em semitons (+12 a -12) sem alterar o andamento |
-| 3 | **Ajuste de velocidade** | Fator de velocidade (0.5× a 2.0×) sem alterar o tom |
-| 4 | **Player de áudio** | Reprodução do áudio processado direto no browser |
-
-As funcionalidades 2 e 3 são independentes: o usuário pode usar uma, a outra, ou ambas ao mesmo tempo.
+| 3 | **Player de áudio** | Reprodução do áudio processado direto no browser |
 
 ### Fluxo principal
 
 ```
 1. Usuário cola link do YouTube
 2. App faz download do áudio (yt-dlp)
-3. Usuário ajusta sliders de tom (semitons) e/ou velocidade
+3. Usuário ajusta slider de semitons
 4. Usuário clica em "Processar"
-5. App aplica pitch shift e/ou time stretch (librosa + pyrubberband)
+5. App aplica pitch shift (pedalboard)
 6. Player de áudio aparece na tela para reprodução imediata
 ```
 
@@ -41,7 +38,6 @@ As funcionalidades 2 e 3 são independentes: o usuário pode usar uma, a outra, 
 - **Controles**:
   - Campo de texto para URL do YouTube
   - Slider de semitons: -12 a +12, valor padrão 0
-  - Slider de velocidade: 0.5× a 2.0×, passo 0.05, valor padrão 1.0×
   - Botão "Processar"
   - Player de áudio nativo do Streamlit (`st.audio`)
 
@@ -61,14 +57,14 @@ As funcionalidades 2 e 3 são independentes: o usuário pode usar uma, a outra, 
 | Gerenciamento de ambiente | `uv` |
 | Interface | Streamlit |
 | Download de áudio | `yt-dlp` |
-| Processamento de áudio | `librosa`, `pyrubberband`, `soundfile` |
+| Processamento de áudio | `pedalboard` (Spotify) |
 | Deploy | Streamlit Community Cloud |
 
-### Por que pyrubberband + librosa?
+### Por que pedalboard?
 
-- `librosa.effects.pitch_shift` usa pyrubberband por baixo quando disponível — qualidade superior (phase vocoder com rubber band algorithm)
-- `librosa.effects.time_stretch` para redução/aumento de velocidade sem alterar o tom
-- Ambos permitem processar offline (sem API externa)
+- Qualidade de nível profissional (JUCE/phase vocoder), mantido pela Spotify
+- Sem dependências de sistema — instala como wheel puro, sem binários C++
+- Compatível com Streamlit Cloud sem configuração adicional
 
 ---
 
@@ -89,7 +85,7 @@ As funcionalidades 2 e 3 são independentes: o usuário pode usar uma, a outra, 
 |--------|---------------|
 | v1.1 | Suporte a upload de arquivos MP3/WAV |
 | v1.2 | Loop de trecho (definir início e fim em segundos) |
-| v1.3 | Redução de velocidade sem mudança de tom (já contemplado pelo time stretch, mas com UI dedicada) |
+| v1.3 | Ajuste de velocidade (time stretch sem alterar o tom) |
 | v2.0 | Detecção automática do tom original |
 | v2.0 | Histórico de músicas e configurações por sessão |
 
