@@ -1,36 +1,9 @@
 import tempfile
 import os
 import streamlit as st
-import yt_dlp
-from pedalboard import Pedalboard, PitchShift
-from pedalboard.io import AudioFile
 
-
-def is_valid_youtube_url(url: str) -> bool:
-    return "youtube.com/watch" in url or "youtu.be/" in url
-
-
-def download_audio(url: str, tmp_dir: str) -> str:
-    yt_opts = {
-        "format": "bestaudio/best",
-        "outtmpl": os.path.join(tmp_dir, "audio.%(ext)s"),
-        "postprocessors": [{"key": "FFmpegExtractAudio", "preferredcodec": "wav"}],
-        "quiet": True,
-    }
-    with yt_dlp.YoutubeDL(yt_opts) as ydl:
-        ydl.download([url])
-    return os.path.join(tmp_dir, "audio.wav")
-
-
-def process_audio(input_path: str, output_path: str, semitones: int) -> None:
-    with AudioFile(input_path) as f:
-        audio = f.read(f.frames)
-        sr = f.samplerate
-    board = Pedalboard([PitchShift(semitones=semitones)])
-    processed = board(audio, sr)
-    with AudioFile(output_path, "w", sr, processed.shape[0]) as f:
-        f.write(processed)
-
+from audio.downloader import is_valid_youtube_url, download_audio
+from audio.processor import process_audio
 
 if "downloaded_url" not in st.session_state:
     st.session_state.downloaded_url = None
