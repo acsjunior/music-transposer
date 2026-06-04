@@ -3,7 +3,7 @@ import tempfile
 import streamlit as st
 
 from audio.downloader import is_valid_youtube_url, download_audio
-from audio.processor import process_audio
+from audio.processor import process_audio, convert_to_mp3
 
 YOUTUBE_ENABLED = os.environ.get("YOUTUBE_ENABLED", "true").lower() == "true"
 
@@ -84,3 +84,15 @@ if st.button("Processar", type="primary", use_container_width=True):
     label = f"**{st.session_state.video_title}** — {semitones:+d} semitons" if semitones != 0 else f"**{st.session_state.video_title}** — tom original"
     st.success(label)
     st.audio(output_path)
+
+    if YOUTUBE_ENABLED:
+        mp3_path = os.path.join(st.session_state.tmp_dir, "output.mp3")
+        convert_to_mp3(output_path, mp3_path)
+        with open(mp3_path, "rb") as f:
+            st.download_button(
+                label="Baixar MP3",
+                data=f,
+                file_name=f"{st.session_state.video_title} ({semitones:+d} semitons).mp3",
+                mime="audio/mpeg",
+                use_container_width=True,
+            )
